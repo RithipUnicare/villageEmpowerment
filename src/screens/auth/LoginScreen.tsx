@@ -8,19 +8,44 @@ import {
 } from 'react-native';
 import { TextInput, Button, Text, Title, Surface } from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
+import { AuthService } from '../../services/AuthService';
 
 const LoginScreen = ({ navigation }: any) => {
-  const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    // Basic logic for demonstration
+  const handleLogin = async () => {
+    if (!mobileNumber || !password) {
+      setError('Please enter mobile number and password');
+      return;
+    }
+
+    if (mobileNumber.length !== 10) {
+      setError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const response = await AuthService.login(mobileNumber, password);
+
+      if (response.success) {
+        // Navigation will be handled by App.tsx based on authentication state
+        console.log('Login successful');
+      } else {
+        setError(response.message || 'Login failed');
+      }
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || 'Login failed. Please try again.',
+      );
+    } finally {
       setLoading(false);
-      // navigation.navigate('Dashboard');
-    }, 1500);
+    }
   };
 
   return (
@@ -32,29 +57,40 @@ const LoginScreen = ({ navigation }: any) => {
         <Title style={styles.title}>Village Empowerment</Title>
         <Text style={styles.subtitle}>Sign in to your account</Text>
 
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
         <TextInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
+          label="Mobile Number"
+          value={mobileNumber}
+          onChangeText={text => {
+            setMobileNumber(text);
+            setError('');
+          }}
           mode="outlined"
-          keyboardType="email-address"
-          autoCapitalize="none"
+          keyboardType="phone-pad"
+          maxLength={10}
           style={styles.input}
+          left={<TextInput.Icon icon="phone" />}
         />
 
         <TextInput
           label="Password"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={text => {
+            setPassword(text);
+            setError('');
+          }}
           mode="outlined"
           secureTextEntry
           style={styles.input}
+          left={<TextInput.Icon icon="lock" />}
         />
 
         <Button
           mode="contained"
           onPress={handleLogin}
           loading={loading}
+          disabled={loading}
           style={styles.button}
           contentStyle={styles.buttonContent}
         >
@@ -63,7 +99,7 @@ const LoginScreen = ({ navigation }: any) => {
 
         <Button
           mode="text"
-          onPress={() => navigation.navigate('Signup')}
+          onPress={() => navigation.replace('Signup')}
           style={styles.signupButton}
         >
           Don't have an account? Sign Up
@@ -119,6 +155,12 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     marginTop: responsiveHeight(2.5),
+  },
+  errorText: {
+    color: '#B00020',
+    fontSize: 13,
+    marginBottom: responsiveHeight(2),
+    textAlign: 'center',
   },
 });
 

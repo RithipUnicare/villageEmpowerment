@@ -84,7 +84,7 @@ const SignupScreen = ({ navigation }: any) => {
 
           <Button
             mode="text"
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.replace('Login')}
             style={styles.loginButton}
           >
             Already have an account? Login

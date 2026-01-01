@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Searchbar,
   Card,
@@ -21,6 +29,11 @@ const VillageListScreen = ({ navigation }: any) => {
   const [villages, setVillages] = useState<Village[]>([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [district, setDistrict] = useState('');
+  const [state, setState] = useState('');
+  const [population, setPopulation] = useState('');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     fetchVillages();
@@ -29,9 +42,11 @@ const VillageListScreen = ({ navigation }: any) => {
   const fetchVillages = async () => {
     setLoading(true);
     try {
-      // const res = await VillageService.getAll();
-      // setVillages(res.data);
-      // Dummy data
+      const res = await VillageService.getAll();
+      setVillages(res.data);
+    } catch (e) {
+      console.error(e);
+      // Fallback to dummy data if API fails
       setVillages([
         {
           id: 1,
@@ -50,11 +65,38 @@ const VillageListScreen = ({ navigation }: any) => {
           description: 'Traditional agricultural village',
         },
       ]);
-    } catch (e) {
-      console.error(e);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateVillage = async () => {
+    if (!name || !district || !state || !population) {
+      return;
+    }
+
+    try {
+      await VillageService.create({
+        name,
+        district,
+        state,
+        population: parseInt(population),
+        description,
+      });
+      setVisible(false);
+      resetForm();
+      fetchVillages();
+    } catch (error) {
+      console.error('Error creating village:', error);
+    }
+  };
+
+  const resetForm = () => {
+    setName('');
+    setDistrict('');
+    setState('');
+    setPopulation('');
+    setDescription('');
   };
 
   const renderVillage = ({ item }: { item: Village }) => (
@@ -76,48 +118,104 @@ const VillageListScreen = ({ navigation }: any) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Searchbar
-        placeholder="Search Villages"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={styles.searchBar}
-      />
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          <Searchbar
+            placeholder="Search Villages"
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+            style={styles.searchBar}
+          />
 
-      <FlatList
-        data={villages}
-        renderItem={renderVillage}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchVillages} />
-        }
-      />
+          <FlatList
+            data={villages}
+            renderItem={renderVillage}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.listContent}
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={fetchVillages} />
+            }
+          />
 
-      <FAB icon="plus" style={styles.fab} onPress={() => setVisible(true)} />
+          <FAB
+            icon="plus"
+            style={styles.fab}
+            onPress={() => setVisible(true)}
+          />
 
-      <Portal>
-        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-          <Dialog.Title>Add New Village</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              label="Village Name"
-              mode="outlined"
-              style={styles.dialogInput}
-            />
-            <TextInput
-              label="District"
-              mode="outlined"
-              style={styles.dialogInput}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Cancel</Button>
-            <Button onPress={() => setVisible(false)}>Add</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </View>
+          <Portal>
+            <Dialog
+              visible={visible}
+              onDismiss={() => {
+                setVisible(false);
+                resetForm();
+              }}
+            >
+              <Dialog.Title>Add New Village</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Village Name *"
+                  value={name}
+                  onChangeText={setName}
+                  mode="outlined"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="District *"
+                  value={district}
+                  onChangeText={setDistrict}
+                  mode="outlined"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="State *"
+                  value={state}
+                  onChangeText={setState}
+                  mode="outlined"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="Population *"
+                  value={population}
+                  onChangeText={setPopulation}
+                  mode="outlined"
+                  keyboardType="numeric"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="Description"
+                  value={description}
+                  onChangeText={setDescription}
+                  mode="outlined"
+                  multiline
+                  numberOfLines={3}
+                  style={styles.dialogInput}
+                />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    setVisible(false);
+                    resetForm();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onPress={handleCreateVillage}>Add</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Title, Text, Card, List, Button, Divider } from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
 
@@ -7,55 +14,68 @@ const VillageDetailsScreen = ({ route }: any) => {
   const { village } = route.params;
 
   return (
-    <ScrollView style={styles.container}>
-      <Card style={styles.headerCard}>
-        <Card.Title
-          title={village.name}
-          subtitle={`${village.district}, ${village.state}`}
-        />
-        <Card.Content>
-          <Text style={styles.description}>{village.description}</Text>
-        </Card.Content>
-      </Card>
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
+        style={{ flex: 1 }}
+      >
+        <ScrollView style={styles.container}>
+          <Card style={styles.headerCard}>
+            <Card.Title
+              title={village.name}
+              subtitle={`${village.district}, ${village.state}`}
+            />
+            <Card.Content>
+              <Text style={styles.description}>{village.description}</Text>
+            </Card.Content>
+          </Card>
 
-      <View style={styles.section}>
-        <Title style={styles.sectionTitle}>Statistics</Title>
-        <Card style={styles.infoCard}>
-          <List.Item
-            title="Population"
-            description={village.population.toLocaleString()}
-            left={props => <List.Icon {...props} icon="account-group" />}
-          />
-          <Divider />
-          <List.Item
-            title="Primary School"
-            description="Available"
-            left={props => <List.Icon {...props} icon="school" />}
-          />
-          <Divider />
-          <List.Item
-            title="Healthcare Center"
-            description="Operational"
-            left={props => <List.Icon {...props} icon="hospital-building" />}
-          />
-        </Card>
-      </View>
+          <View style={styles.section}>
+            <Title style={styles.sectionTitle}>Statistics</Title>
+            <Card style={styles.infoCard}>
+              <List.Item
+                title="Population"
+                description={village.population.toLocaleString()}
+                left={props => <List.Icon {...props} icon="account-group" />}
+              />
+              <Divider />
+              <List.Item
+                title="Primary School"
+                description="Available"
+                left={props => <List.Icon {...props} icon="school" />}
+              />
+              <Divider />
+              <List.Item
+                title="Healthcare Center"
+                description="Operational"
+                left={props => (
+                  <List.Icon {...props} icon="hospital-building" />
+                )}
+              />
+            </Card>
+          </View>
 
-      <View style={styles.actions}>
-        <Button
-          mode="contained"
-          style={styles.actionButton}
-          onPress={() => {
-            /* Navigate to facilities */
-          }}
-        >
-          View Facilities
-        </Button>
-        <Button mode="outlined" style={styles.actionButton}>
-          Active Schemes
-        </Button>
-      </View>
-    </ScrollView>
+          <View style={styles.actions}>
+            <Button
+              mode="contained"
+              style={styles.actionButton}
+              onPress={() => {
+                /* Navigate to facilities */
+              }}
+            >
+              View Facilities
+            </Button>
+            <Button mode="outlined" style={styles.actionButton}>
+              Active Schemes
+            </Button>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

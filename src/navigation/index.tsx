@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useUser } from '../context/UserContext';
 
 // Placeholder Screens (to be implemented)
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -17,6 +18,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export const MainTabNavigator = () => {
+  const { isSuperAdmin } = useUser();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -38,19 +41,24 @@ export const MainTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Villages"
-        component={VillageListScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="home-city"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
+
+      {/* Superadmin only: Village Management */}
+      {isSuperAdmin && (
+        <Tab.Screen
+          name="Villages"
+          component={VillageListScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="home-city"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+        />
+      )}
+
       <Tab.Screen
         name="Issues"
         component={IssueListScreen}
@@ -64,6 +72,7 @@ export const MainTabNavigator = () => {
           ),
         }}
       />
+
       <Tab.Screen
         name="Schemes"
         component={SchemeScreen}
@@ -77,15 +86,24 @@ export const MainTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Announcements"
-        component={AnnouncementScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bullhorn" color={color} size={size} />
-          ),
-        }}
-      />
+
+      {/* Superadmin only: Announcements */}
+      {isSuperAdmin && (
+        <Tab.Screen
+          name="Announcements"
+          component={AnnouncementScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="bullhorn"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+        />
+      )}
+
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

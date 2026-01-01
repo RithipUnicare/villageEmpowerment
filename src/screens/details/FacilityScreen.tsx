@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Card,
   Title,
@@ -11,6 +20,7 @@ import {
   Button,
   TextInput,
   Chip,
+  IconButton,
 } from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
 import { FacilityService } from '../../services/FacilityService';
@@ -21,6 +31,10 @@ const FacilityScreen = ({ route }: any) => {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
+  const [status, setStatus] = useState('Operational');
 
   useEffect(() => {
     fetchFacilities();
@@ -29,9 +43,11 @@ const FacilityScreen = ({ route }: any) => {
   const fetchFacilities = async () => {
     setLoading(true);
     try {
-      // const res = await FacilityService.getByVillage(villageId);
-      // setFacilities(res.data);
-      // Dummy data
+      const res = await FacilityService.getByVillage(villageId);
+      setFacilities(res.data);
+    } catch (e) {
+      console.error(e);
+      // Fallback to dummy data if API fails
       setFacilities([
         {
           id: 1,
@@ -66,11 +82,49 @@ const FacilityScreen = ({ route }: any) => {
           status: 'Operational',
         },
       ]);
-    } catch (e) {
-      console.error(e);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateFacility = async () => {
+    if (!name || !type || !description) {
+      // Optionally show an alert or toast for missing fields
+      return;
+    }
+
+    try {
+      await FacilityService.add({
+        name,
+        type,
+        description,
+        villageId,
+        status,
+      });
+      setVisible(false);
+      resetForm();
+      fetchFacilities();
+    } catch (error) {
+      console.error('Error creating facility:', error);
+      // Handle error, e.g., show an error message
+    }
+  };
+
+  const handleDeleteFacility = async (id: number) => {
+    try {
+      await FacilityService.delete(id);
+      fetchFacilities();
+    } catch (error) {
+      console.error('Error deleting facility:', error);
+      // Handle error, e.g., show an error message
+    }
+  };
+
+  const resetForm = () => {
+    setName('');
+    setType('');
+    setDescription('');
+    setStatus('Operational');
   };
 
   const getStatusColor = (status: string) => {
@@ -91,12 +145,19 @@ const FacilityScreen = ({ route }: any) => {
       <Card.Content>
         <View style={styles.header}>
           <Title style={styles.title}>{item.name}</Title>
-          <Chip
-            style={{ backgroundColor: getStatusColor(item.status) }}
-            textStyle={{ color: '#fff', fontSize: 11 }}
-          >
-            {item.status}
-          </Chip>
+          <View style={styles.actionButtons}>
+            <Chip
+              style={{ backgroundColor: getStatusColor(item.status) }}
+              textStyle={{ color: '#fff', fontSize: 11 }}
+            >
+              {item.status}
+            </Chip>
+            <IconButton
+              icon="delete"
+              size={20}
+              onPress={() => handleDeleteFacility(item.id)}
+            />
+          </View>
         </View>
         <Paragraph style={styles.type}>{item.type}</Paragraph>
         <Paragraph style={styles.description}>{item.description}</Paragraph>
@@ -105,60 +166,101 @@ const FacilityScreen = ({ route }: any) => {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={facilities}
-        renderItem={renderFacility}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchFacilities} />
-        }
-      />
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          <FlatList
+            data={facilities}
+            renderItem={renderFacility}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.listContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={fetchFacilities}
+              />
+            }
+          />
 
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => setVisible(true)}
-        label="Add Facility"
-      />
+          <FAB
+            icon="plus"
+            style={styles.fab}
+            onPress={() => setVisible(true)}
+            label="Add Facility"
+          />
 
-      <Portal>
-        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-          <Dialog.Title>Add New Facility</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              label="Facility Name"
-              mode="outlined"
-              style={styles.dialogInput}
-            />
-            <TextInput
-              label="Type"
-              mode="outlined"
-              style={styles.dialogInput}
-            />
-            <TextInput
-              label="Description"
-              mode="outlined"
-              multiline
-              numberOfLines={3}
-              style={styles.dialogInput}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Cancel</Button>
-            <Button
-              onPress={() => {
+          <Portal>
+            <Dialog
+              visible={visible}
+              onDismiss={() => {
                 setVisible(false);
-                fetchFacilities();
+                resetForm();
               }}
             >
-              Add
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </View>
+              <Dialog.Title>Add New Facility</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Facility Name *"
+                  value={name}
+                  onChangeText={setName}
+                  mode="outlined"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="Type *"
+                  value={type}
+                  onChangeText={setType}
+                  mode="outlined"
+                  style={styles.dialogInput}
+                />
+                <TextInput
+                  label="Description *"
+                  value={description}
+                  onChangeText={setDescription}
+                  mode="outlined"
+                  multiline
+                  numberOfLines={3}
+                  style={styles.dialogInput}
+                />
+                <Text style={styles.label}>Status</Text>
+                <View style={styles.statusContainer}>
+                  {['Operational', 'Under Maintenance', 'Non-Operational'].map(
+                    s => (
+                      <Chip
+                        key={s}
+                        selected={status === s}
+                        onPress={() => setStatus(s)}
+                        style={styles.statusChip}
+                      >
+                        {s}
+                      </Chip>
+                    ),
+                  )}
+                </View>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    setVisible(false);
+                    resetForm();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onPress={handleCreateFacility}>Add</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -215,6 +317,27 @@ const styles = StyleSheet.create({
   dialogInput: {
     marginBottom: responsiveHeight(2),
     backgroundColor: '#FAFAFA',
+  },
+  label: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: responsiveHeight(2),
+  },
+  statusChip: {
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 });
 

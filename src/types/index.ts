@@ -60,9 +60,11 @@ export interface Facility {
 
 export interface User {
   id: number;
-  username: string;
+  name: string;
   email: string;
+  mobileNumber: string;
   role: string;
+  roles: string; // For compatibility with API response
   villageId?: number;
 }
 

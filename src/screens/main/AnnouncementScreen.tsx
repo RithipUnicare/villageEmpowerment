@@ -10,6 +10,7 @@ import {
   Button,
   TextInput,
   Avatar,
+  IconButton,
 } from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
 import {
@@ -33,30 +34,40 @@ const AnnouncementScreen = () => {
     try {
       const res = await AnnouncementService.getAll();
       setAnnouncements(res.data);
-      // Dummy data
-      // setAnnouncements([
-      //   {
-      //     id: 1,
-      //     title: 'New Health Policy',
-      //     content:
-      //       'The government has introduced a new primary healthcare scheme for rural areas.',
-      //     createdAt: '2026-01-01',
-      //     createdBy: 'Admin',
-      //   },
-      //   {
-      //     id: 2,
-      //     title: 'Village Meeting',
-      //     content:
-      //       'Village council meeting scheduled for January 15th at the community hall.',
-      //     createdAt: '2025-12-30',
-      //     createdBy: 'Village Head',
-      //   },
-      // ]);
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateAnnouncement = async () => {
+    if (!title || !content) {
+      return;
+    }
+
+    try {
+      await AnnouncementService.create({ title, content });
+      setVisible(false);
+      resetForm();
+      fetchAnnouncements();
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+    }
+  };
+
+  const handleDeleteAnnouncement = async (id: number) => {
+    try {
+      await AnnouncementService.delete(id);
+      fetchAnnouncements();
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+    }
+  };
+
+  const resetForm = () => {
+    setTitle('');
+    setContent('');
   };
 
   const renderAnnouncement = ({ item }: { item: Announcement }) => (
@@ -71,6 +82,13 @@ const AnnouncementScreen = () => {
             {...props}
             icon="bullhorn"
             theme={{ colors: { primary: '#FFB300' } }}
+          />
+        )}
+        right={props => (
+          <IconButton
+            {...props}
+            icon="delete"
+            onPress={() => handleDeleteAnnouncement(item.id)}
           />
         )}
       />
@@ -100,18 +118,24 @@ const AnnouncementScreen = () => {
       />
 
       <Portal>
-        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+        <Dialog
+          visible={visible}
+          onDismiss={() => {
+            setVisible(false);
+            resetForm();
+          }}
+        >
           <Dialog.Title>Create Announcement</Dialog.Title>
           <Dialog.Content>
             <TextInput
-              label="Title"
+              label="Title *"
               value={title}
               onChangeText={setTitle}
               mode="outlined"
               style={styles.dialogInput}
             />
             <TextInput
-              label="Content"
+              label="Content *"
               value={content}
               onChangeText={setContent}
               mode="outlined"
@@ -121,15 +145,15 @@ const AnnouncementScreen = () => {
             />
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setVisible(false)}>Cancel</Button>
             <Button
               onPress={() => {
                 setVisible(false);
-                fetchAnnouncements();
+                resetForm();
               }}
             >
-              Create
+              Cancel
             </Button>
+            <Button onPress={handleCreateAnnouncement}>Create</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

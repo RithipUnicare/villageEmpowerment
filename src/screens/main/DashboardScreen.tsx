@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
-import { Text, Title, Card, IconButton, Avatar } from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Text,
+  Title,
+  Card,
+  IconButton,
+  Avatar,
+  Paragraph,
+} from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
 import { DashboardService } from '../../services/DashboardService';
 import { DashboardStats } from '../../types';
@@ -9,16 +23,25 @@ const DashboardScreen = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
-    // fetchStats();
-    // Dummy stats for now
-    setStats({
-      totalVillages: 12,
-      totalIssues: 45,
-      resolvedIssues: 30,
-      pendingIssues: 15,
-      activeSchemes: 8,
-    });
+    fetchStats();
   }, []);
+
+  const fetchStats = async () => {
+    try {
+      const res = await DashboardService.getAdminStats();
+      setStats(res.data);
+    } catch (e) {
+      console.error(e);
+      // Fallback to dummy data if API fails
+      setStats({
+        totalVillages: 12,
+        totalIssues: 45,
+        resolvedIssues: 30,
+        pendingIssues: 15,
+        activeSchemes: 8,
+      });
+    }
+  };
 
   const StatCard = ({ title, count, icon, color }: any) => (
     <Card
@@ -39,55 +62,65 @@ const DashboardScreen = () => {
   );
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Title style={styles.welcomeText}>Hello, Admin!</Title>
-        <Text style={styles.subWelcomeText}>Here is your village overview</Text>
-      </View>
+    <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
+        style={{ flex: 1 }}
+      >
+        <ScrollView style={styles.container}>
+          <View style={styles.header}>
+            <Title style={styles.welcomeText}>Hello, Admin!</Title>
+            <Text style={styles.subWelcomeText}>
+              Here is your village overview
+            </Text>
+          </View>
 
-      <View style={styles.statsGrid}>
-        <StatCard
-          title="Total Villages"
-          count={stats?.totalVillages}
-          icon="home-city"
-          color="#2E7D32"
-        />
-        <StatCard
-          title="Total Issues"
-          count={stats?.totalIssues}
-          icon="alert-circle"
-          color="#E53935"
-        />
-        <StatCard
-          title="Resolved"
-          count={stats?.resolvedIssues}
-          icon="check-circle"
-          color="#43A047"
-        />
-        <StatCard
-          title="Active Schemes"
-          count={stats?.activeSchemes}
-          icon="file-document"
-          color="#FFB300"
-        />
-      </View>
+          <View style={styles.statsGrid}>
+            <StatCard
+              title="Total Villages"
+              count={stats?.totalVillages}
+              icon="home-city"
+              color="#2E7D32"
+            />
+            <StatCard
+              title="Total Issues"
+              count={stats?.totalIssues}
+              icon="alert-circle"
+              color="#E53935"
+            />
+            <StatCard
+              title="Resolved"
+              count={stats?.resolvedIssues}
+              icon="check-circle"
+              color="#43A047"
+            />
+            <StatCard
+              title="Active Schemes"
+              count={stats?.activeSchemes}
+              icon="file-document"
+              color="#FFB300"
+            />
+          </View>
 
-      <Title style={styles.sectionTitle}>Recent Announcements</Title>
-      {/* List would go here */}
-      <Card style={styles.announcementCard}>
-        <Card.Title
-          title="New Health Policy"
-          subtitle="Effective from Jan 2026"
-          left={props => <Avatar.Icon {...props} icon="information" />}
-        />
-        <Card.Content>
-          <Text>
-            The government has introduced a new primary healthcare scheme for
-            rural areas.
-          </Text>
-        </Card.Content>
-      </Card>
-    </ScrollView>
+          <Title style={styles.sectionTitle}>Recent Announcements</Title>
+          {/* List would go here */}
+          <Card style={styles.announcementCard}>
+            <Card.Title
+              title="New Health Policy"
+              subtitle="Effective from Jan 2026"
+              left={props => <Avatar.Icon {...props} icon="information" />}
+            />
+            <Card.Content>
+              <Text>
+                The government has introduced a new primary healthcare scheme
+                for rural areas.
+              </Text>
+            </Card.Content>
+          </Card>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
