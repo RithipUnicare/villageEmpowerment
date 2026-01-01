@@ -1,0 +1,1061 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "servers": [
+    {
+      "url": "http://app.undefineddevelopers.online/empowering/api",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/villages/{id}": {
+      "get": {
+        "tags": ["village-controller"],
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVillageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["village-controller"],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VillageRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVillageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["village-controller"],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/edit": {
+      "put": {
+        "tags": ["user-controller"],
+        "operationId": "edit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserEditRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issues/{id}/status": {
+      "put": {
+        "tags": ["issue-controller"],
+        "operationId": "updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseIssueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facilities/{id}": {
+      "put": {
+        "tags": ["facility-controller"],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FacilityRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFacilityResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["facility-controller"],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/villages": {
+      "get": {
+        "tags": ["village-controller"],
+        "operationId": "all",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListVillageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["village-controller"],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VillageRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVillageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schemes": {
+      "get": {
+        "tags": ["scheme-controller"],
+        "operationId": "all_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListScheme"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["scheme-controller"],
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SchemeRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseScheme" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issues": {
+      "post": {
+        "tags": ["issue-controller"],
+        "operationId": "raise",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IssueRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseIssueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facilities": {
+      "post": {
+        "tags": ["facility-controller"],
+        "operationId": "add",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FacilityRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFacilityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/update-role": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "updateRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RoleUpdateRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "signup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/request-password-reset": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "requestReset",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "refresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMapStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["auth-controller"],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseMapStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/announcements": {
+      "get": {
+        "tags": ["announcement-controller"],
+        "operationId": "all_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListAnnouncement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["announcement-controller"],
+        "operationId": "create_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAnnouncement"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["user-controller"],
+        "operationId": "all_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseListUser" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": ["user-controller"],
+        "operationId": "me",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseUser" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schemes/active": {
+      "get": {
+        "tags": ["scheme-controller"],
+        "operationId": "active",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListScheme"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issues/village/{villageId}": {
+      "get": {
+        "tags": ["issue-controller"],
+        "operationId": "byVillage",
+        "parameters": [
+          {
+            "name": "villageId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListIssueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/issues/me": {
+      "get": {
+        "tags": ["issue-controller"],
+        "operationId": "myIssues",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListIssueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facilities/village/{villageId}": {
+      "get": {
+        "tags": ["facility-controller"],
+        "operationId": "byVillage_1",
+        "parameters": [
+          {
+            "name": "villageId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListFacilityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/village/{villageId}": {
+      "get": {
+        "tags": ["dashboard-controller"],
+        "operationId": "village",
+        "parameters": [
+          {
+            "name": "villageId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseDashboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/admin": {
+      "get": {
+        "tags": ["dashboard-controller"],
+        "operationId": "admin",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseDashboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "delete": {
+        "tags": ["user-controller"],
+        "operationId": "delete_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schemes/{id}": {
+      "delete": {
+        "tags": ["scheme-controller"],
+        "operationId": "delete_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/announcements/{id}": {
+      "delete": {
+        "tags": ["announcement-controller"],
+        "operationId": "delete_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseString" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VillageRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "district": { "type": "string" },
+          "state": { "type": "string" },
+          "population": { "type": "integer", "format": "int64" },
+          "description": { "type": "string" }
+        }
+      },
+      "ApiResponseVillageResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/VillageResponse" }
+        }
+      },
+      "VillageResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "district": { "type": "string" },
+          "state": { "type": "string" },
+          "population": { "type": "integer", "format": "int64" },
+          "description": { "type": "string" }
+        }
+      },
+      "UserEditRequest": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      },
+      "ApiResponseString": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "type": "string" }
+        }
+      },
+      "ApiResponseIssueResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/IssueResponse" }
+        }
+      },
+      "IssueResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "status": { "type": "string" },
+          "raisedBy": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "imageUrl": { "type": "string" }
+        }
+      },
+      "FacilityRequest": {
+        "type": "object",
+        "properties": {
+          "villageId": { "type": "integer", "format": "int64" },
+          "category": { "type": "string" },
+          "status": { "type": "string" },
+          "remarks": { "type": "string" }
+        }
+      },
+      "ApiResponseFacilityResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/FacilityResponse" }
+        }
+      },
+      "FacilityResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "villageId": { "type": "integer", "format": "int64" },
+          "category": { "type": "string" },
+          "status": { "type": "string" },
+          "remarks": { "type": "string" }
+        }
+      },
+      "SchemeRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "ApiResponseScheme": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/Scheme" }
+        }
+      },
+      "Scheme": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "active": { "type": "boolean" }
+        }
+      },
+      "IssueRequest": {
+        "type": "object",
+        "properties": {
+          "villageId": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "imageUrl": { "type": "string" }
+        }
+      },
+      "RoleUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": { "type": "string" },
+          "roles": { "type": "string" }
+        }
+      },
+      "SignupRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "mobileNumber": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "ApiResponseMapStringString": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "Announcement": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "message": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiResponseAnnouncement": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/Announcement" }
+        }
+      },
+      "ApiResponseListVillageResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VillageResponse" }
+          }
+        }
+      },
+      "ApiResponseListUser": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/User" }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "mobileNumber": { "type": "string" },
+          "password": { "type": "string" },
+          "email": { "type": "string" },
+          "roles": { "type": "string" }
+        }
+      },
+      "ApiResponseUser": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/User" }
+        }
+      },
+      "ApiResponseListScheme": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Scheme" }
+          }
+        }
+      },
+      "ApiResponseListIssueResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/IssueResponse" }
+          }
+        }
+      },
+      "ApiResponseListFacilityResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/FacilityResponse" }
+          }
+        }
+      },
+      "ApiResponseDashboardResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/DashboardResponse" }
+        }
+      },
+      "DashboardResponse": {
+        "type": "object",
+        "properties": {
+          "totalVillages": { "type": "integer", "format": "int64" },
+          "totalUsers": { "type": "integer", "format": "int64" },
+          "totalIssues": { "type": "integer", "format": "int64" },
+          "resolvedIssues": { "type": "integer", "format": "int64" },
+          "pendingIssues": { "type": "integer", "format": "int64" }
+        }
+      },
+      "ApiResponseListAnnouncement": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Announcement" }
+          }
+        }
+      }
+    }
+  }
+}
