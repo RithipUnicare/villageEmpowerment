@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Avatar,
@@ -38,7 +44,7 @@ const ProfileScreen = ({ navigation }: any) => {
         keyboardVerticalOffset={Platform.OS === 'android' ? 30 : 0}
         style={{ flex: 1 }}
       >
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <Surface style={styles.header}>
             <Avatar.Icon
               size={80}
@@ -95,7 +101,7 @@ const ProfileScreen = ({ navigation }: any) => {
               Logout
             </Button>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

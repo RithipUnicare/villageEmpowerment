@@ -9,8 +9,10 @@ import {
 import { TextInput, Button, Text, Title, Surface } from 'react-native-paper';
 import { responsiveWidth, responsiveHeight } from '../../utils/responsive';
 import { AuthService } from '../../services/AuthService';
+import { useUser } from '../../context/UserContext';
 
 const LoginScreen = ({ navigation }: any) => {
+  const { fetchUserProfile } = useUser();
   const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,8 @@ const LoginScreen = ({ navigation }: any) => {
       const response = await AuthService.login(mobileNumber, password);
 
       if (response.success) {
-        // Navigation will be handled by App.tsx based on authentication state
+        // Fetch user profile immediately after successful login
+        await fetchUserProfile();
         console.log('Login successful');
       } else {
         setError(response.message || 'Login failed');

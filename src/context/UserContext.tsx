@@ -56,10 +56,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    const checkUser = async () => {
+      const { StorageService } = require('../utils/storage');
+      const hasToken = await StorageService.isAuthenticated();
+      if (hasToken && !user && !isLoading) {
+        fetchUserProfile();
+      }
+    };
+    checkUser();
+  }, [user, isLoading]);
+
+  useEffect(() => {
     fetchUserProfile();
   }, []);
 
-  const isSuperAdmin = user?.roles?.toUpperCase() === 'SUPERADMIN';
+  const isSuperAdmin =
+    !!user?.roles?.toUpperCase().includes('SUPERADMIN') ||
+    !!user?.roles?.toUpperCase().includes('ADMIN');
 
   return (
     <UserContext.Provider

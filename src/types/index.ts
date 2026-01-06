@@ -69,10 +69,8 @@ export interface User {
 }
 
 export interface LoginResponse {
-  token: string;
-  role: string;
-  username: string;
-  id: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface DashboardStats {

@@ -1,11 +1,6 @@
 import apiClient from '../api/client';
-import { ApiResponse } from '../types';
+import { ApiResponse, LoginResponse } from '../types';
 import { StorageService } from '../utils/storage';
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
 
 export const AuthService = {
   login: async (
@@ -18,11 +13,12 @@ export const AuthService = {
     });
 
     // Store tokens after successful login
-    if (response.data?.accessToken && response.data?.refreshToken) {
-      await StorageService.saveTokens(
-        response.data.accessToken,
-        response.data.refreshToken,
-      );
+    // The response structure is { success: true, message: "...", data: { accessToken: "...", refreshToken: "..." } }
+    if (response.data?.success && response.data?.data) {
+      const { accessToken, refreshToken } = response.data.data;
+      if (accessToken && refreshToken) {
+        await StorageService.saveTokens(accessToken, refreshToken);
+      }
     }
 
     return response.data;
